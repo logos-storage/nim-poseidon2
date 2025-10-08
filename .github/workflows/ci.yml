@@ -4,15 +4,18 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        nim: [1.6.14, 2.0.14]
+        platform: [ubuntu-latest, windows-latest]
+        nim: [binary:2.2.4]
+    runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v2
-    - uses: iffy/install-nim@v3
+    - uses: iffy/install-nim@v5
       with:
         version: ${{ matrix.nim }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       run: nimble install -y
     - name: Test

@@ -2,13 +2,13 @@
   "version": 2,
   "packages": {
     "constantine": {
-      "version": "0.1.0",
-      "vcsRevision": "bc3845aa492b52f7fef047503b1592e830d1a774",
-      "url": "https://github.com/mratsim/constantine",
+      "version": "0.2.1",
+      "vcsRevision": "6acaa924987b6fa69a0cd173e17cd3afdc244e4d",
+      "url": "https://github.com/durability-labs/constantine",
       "downloadMethod": "git",
       "dependencies": [],
       "checksums": {
-        "sha1": "09594d4ce93e83ae377a7a9cb8fd4472b104ca4b"
+        "sha1": "93cbea554e2c5c69ab158ccef731a2848a069627"
       }
     }
   },
