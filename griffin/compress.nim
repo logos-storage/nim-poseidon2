@@ -1,4 +1,5 @@
-import ./types
+
+import ../poseidon2/types
 import ./permutation
 
 # 2-to-1 compression

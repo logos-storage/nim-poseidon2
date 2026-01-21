@@ -10,10 +10,8 @@ import constantine/math/arithmetic
 import constantine/math/io/io_fields
 import constantine/math/io/io_bigints
 
-import poseidon2/types
-import poseidon2/io
+import poseidon2
 import poseidon2/permutation
-
 import ./shared
 
 #-------------------------------------------------------------------------------
