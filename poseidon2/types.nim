@@ -22,6 +22,7 @@ func getZero*() : F =
 
 const zero* : F = getZero()
 const one*  : F = fromHex(F,"0x01")     # note: `fromUint()` does not work at compile time
+const two*  : F = fromHex(F,"0x02") 
 
 const twoToThe64* : F = fromHex(F,"0x10000000000000000")
 
@@ -39,5 +40,32 @@ func arrayFromHex*[N](
     tmp[i] = hexToF(inp[i], endian)
   return tmp
 
+#-------------------------------------------------------------------------------
+
+func `+`*(x, y: F): F =  ( var z: F = x ; z += y ; return z )
+func `-`*(x, y: F): F =  ( var z: F = x ; z -= y ; return z )
+func `*`*(x, y: F): F =  ( var z: F = x ; z *= y ; return z )
+
 func `==`*(a, b: F): bool =
   bool(arithmetic.`==`(a, b))
+
+func sqr*(x : F): F = 
+  var y = x
+  y.square()
+  return y
+
+#-------------------------------------------------------------------------------
+
+func fastPow*(base: F, expo: B): F = 
+  var s : F = base
+  var a : F = one
+  var e : B = expo
+  for i in 0..<254:
+    if bool(isOdd(e)):
+      a *= s
+    s.square()
+    e.div2()
+  return a
+
+#-------------------------------------------------------------------------------
+

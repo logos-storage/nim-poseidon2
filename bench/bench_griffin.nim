@@ -4,7 +4,7 @@
 #
 
 import strformat
-#import strutils
+# import strutils
 
 import constantine/math/arithmetic
 import constantine/math/io/io_fields
@@ -12,7 +12,7 @@ import constantine/math/io/io_bigints
 
 import poseidon2/types
 import poseidon2/io
-import poseidon2/permutation
+import griffin/permutation
 
 import ./shared
 
@@ -35,11 +35,14 @@ proc iteratePerm(n: int) =
 
 when isMainModule:
 
-  echo "quick & dirty nim-poseidon2-bn254 benchmark"
-  
-  let n: int = 1000000
+  testGriffin()
+  echo "----------------------------------"
 
-  let text = fmt"{n} Poseidon2 permutations"
+  echo "quick & dirty Griffin benchmark"
+  
+  let n: int = 100000
+
+  let text = fmt"{n} Grffin permutations"
   withMeasureTime(true,text): 
     iteratePerm(n)
 
