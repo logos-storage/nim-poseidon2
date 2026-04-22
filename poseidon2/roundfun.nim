@@ -3,12 +3,16 @@ import
   constantine/named/algebras
 
 import ./types
-import ./roundconst
+import ./roundconst_old
+import ./roundconst_new
 
 #-------------------------------------------------------------------------------
 
-const externalRoundConst : array[24, F] = arrayFromHex( externalRoundConstStr )
-const internalRoundConst : array[56, F] = arrayFromHex( internalRoundConstStr )
+const externalRoundConstOld : array[24, F] = arrayFromHex( externalRoundConstOldStr )
+const internalRoundConstOld : array[56, F] = arrayFromHex( internalRoundConstOldStr )
+
+const externalRoundConstNew : array[24, F] = arrayFromHex( externalRoundConstNewStr )
+const internalRoundConstNew : array[56, F] = arrayFromHex( internalRoundConstNewStr )
 
 #-------------------------------------------------------------------------------
 
@@ -25,8 +29,10 @@ func linearLayer*(x, y, z : var F) =
   y += s
   z += s
 
-func internalRound*(j: int; x, y, z: var F) =
-  x += internalRoundConst[j]
+#-------------------------------------------------------------------------------
+
+func internalRoundOld*(j: int; x, y, z: var F) =
+  x += internalRoundConstOld[j]
   sbox(x)
   var s = x ; s += y ;  s += z
   double(z)
@@ -34,10 +40,10 @@ func internalRound*(j: int; x, y, z: var F) =
   y += s
   z += s
 
-func externalRound*(j: int; x, y, z : var F) =
-  x += externalRoundConst[3*j+0]
-  y += externalRoundConst[3*j+1]
-  z += externalRoundConst[3*j+2]
+func externalRoundOld*(j: int; x, y, z : var F) =
+  x += externalRoundConstOld[3*j+0]
+  y += externalRoundConstOld[3*j+1]
+  z += externalRoundConstOld[3*j+2]
   sbox(x) ; sbox(y) ; sbox(z)
   var s = x ; s += y ; s += z
   x += s
@@ -46,3 +52,23 @@ func externalRound*(j: int; x, y, z : var F) =
 
 #-------------------------------------------------------------------------------
 
+func internalRoundNew*(j: int; x, y, z: var F) =
+  x += internalRoundConstNew[j]
+  sbox(x)
+  var s = x ; s += y ;  s += z
+  double(z)
+  x += s
+  y += s
+  z += s
+
+func externalRoundNew*(j: int; x, y, z : var F) =
+  x += externalRoundConstNew[3*j+0]
+  y += externalRoundConstNew[3*j+1]
+  z += externalRoundConstNew[3*j+2]
+  sbox(x) ; sbox(y) ; sbox(z)
+  var s = x ; s += y ; s += z
+  x += s
+  y += s
+  z += s
+
+#-------------------------------------------------------------------------------

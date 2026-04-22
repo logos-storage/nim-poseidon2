@@ -1,4 +1,4 @@
-version     = "0.1.0"
+version     = "0.1.1"
 author      = "nim-poseidon2 authors"
 description = "Poseidon2 hash function"
 license     = "MIT"

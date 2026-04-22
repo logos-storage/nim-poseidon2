@@ -10,7 +10,7 @@ import poseidon2
 
 #-------------------------------------------------------------------------------
 
-const expectedSpongeResultsRate1 : array[8, string] =
+const expectedSpongeResultsRate1_oldConstants : array[9, string] =
   [ "11474111961551684932675539562074905375756669035986300321099733737886849683321"
   , "12075737409606154890751050839468327529267137715708285489737384891841319770833"
   , "01607478768131843313297310704782442615640380643931196052095347138434114571392"
@@ -19,9 +19,10 @@ const expectedSpongeResultsRate1 : array[8, string] =
   , "16646216251577650555646508049064625507758601195307236539843683725095763921505"
   , "11914716034377431890952169039751213443286692885071871704776127977841051829452"
   , "20798492850731331785912281726856492405884190236464781409482377236764537088662"
+  , "06540627055407175851799217748185038564362037151837725911893079868194265409140"
   ]
 
-const expectedSpongeResultsRate2 : array[8, string] =
+const expectedSpongeResultsRate2_oldConstants : array[9, string] =
   [ "15335097698975718583905618186682475632756177170667436996250626760551196078076"
   , "05101758095924000127790537496504070769319625501671400349336709520206095219618"
   , "07306734450287348725566606192910189982345130476287345231433021147457815478255"
@@ -30,30 +31,85 @@ const expectedSpongeResultsRate2 : array[8, string] =
   , "04630821736691665506072583795473163860465039714428126246168623896083265248907"
   , "02020506076765964149531002674962673761843846094901604358961533722934321735239"
   , "11732533243633999579592740965735640217427639382365959787508754341969556105663"
+  , "10595863140043317128604467126415689825650822395227997061806436243673828413111"
   ]
 
 #-------------------------------------------------------------------------------
 
-suite "sponge":
+const expectedSpongeResultsRate1_newConstants : array[9, string] =
+  [ "16266571538186917378274620794715615871819075505012642331831740166402113589444"
+  , "01491928274163660244001918443018649243011497181896253665026327205550900025133"
+  , "02412839127042446155240125134683455485652987653749713765008668784861163705152"
+  , "13542922135264044648018285414420351411417846004082653245814369808833670302952"
+  , "07076213890494569790170137210157320757601820601990570639519400872306624103450"
+  , "14352524674388170989103113995374854592404343519856765997715183437545150946627"
+  , "09569766023135969668725409572485043887042089063331497639246627061832860243694"
+  , "07085371443491523419928170734321525595867567352592425091735470317423982305101"
+  , "08760489972278360817463581930800343241641769319369768058091167957311211828855"
+  ]
+
+const expectedSpongeResultsRate2_newConstants : array[9, string] =
+  [ "09046401272760514841637528652889990409326782162327754989145589039437684339646"
+  , "15241474315923430535056537847443353616620358302434799334548590414322880571588"
+  , "21072215602003532013851767027226990768339943605363951211799157616055680003388"
+  , "01170974936269513349886180046259796461929600320496736075445632961164642599434"
+  , "01558215443543426787363296590025566689264472540550531923588672734783818772596"
+  , "09807480697990556434580623882838196982062075470026453062706673159266728569584"
+  , "02822720935161078698932842003982797241316889894694232376768120398512081493835"
+  , "02351886751449393975320062064400658126198560006081569452290595784036978037282"
+  , "18286883995665455411199910174038826133816802309376680038108548762581403366251"
+  ]
+
+#-------------------------------------------------------------------------------
+
+suite "sponge (old round constants)":
 
   test "sponge with rate=1":
-    for n in 0..7:
+    for n in 0..8:
       var xs: seq[F]
       for i in 1..n:
         xs.add( toF(i) )
-      let h = Sponge.digest(xs, rate = 1)
-      check toDecimal(h) == expectedSpongeResultsRate1[n]
+      let h = Sponge.digest(xs, rate = 1, which = HorizenLabsOld)
+      check toDecimal(h) == expectedSpongeResultsRate1_oldConstants[n]
 
   test "sponge with rate=2":
-    for n in 0..7:
+    for n in 0..8:
       var xs: seq[F]
       for i in 1..n:
         xs.add( toF(i) )
-      let h = Sponge.digest(xs, rate = 2)
-      check toDecimal(h) == expectedSpongeResultsRate2[n]
+      let h = Sponge.digest(xs, rate = 2, which = HorizenLabsOld)
+      check toDecimal(h) == expectedSpongeResultsRate2_oldConstants[n]
 
   test "sponge with byte array as input":
     let bytes = toSeq 1'u8..80'u8
     let elements = toSeq bytes.elements(F)
-    let expected = Sponge.digest(elements, rate = 2)
+    let expected = Sponge.digest(elements, rate = 2, which = HorizenLabsOld)
     check bool(Sponge.digest(bytes, rate = 2) == expected)
+
+#-------------------------------------------------------------------------------
+
+suite "sponge (new round constants)":
+
+  test "sponge with rate=1":
+    for n in 0..8:
+      var xs: seq[F]
+      for i in 1..n:
+        xs.add( toF(i) )
+      let h = Sponge.digest(xs, rate = 1, which = HorizenLabsNew)
+      check toDecimal(h) == expectedSpongeResultsRate1_newConstants[n]
+
+  test "sponge with rate=2":
+    for n in 0..8:
+      var xs: seq[F]
+      for i in 1..n:
+        xs.add( toF(i) )
+      let h = Sponge.digest(xs, rate = 2, which = HorizenLabsNew)
+      check toDecimal(h) == expectedSpongeResultsRate2_newConstants[n]
+
+  test "sponge with byte array as input":
+    let bytes = toSeq 1'u8..80'u8
+    let elements = toSeq bytes.elements(F)
+    let expected = Sponge.digest(elements, rate = 2, which = HorizenLabsNew)
+    check bool(Sponge.digest(bytes, rate = 2, which = HorizenLabsNew) == expected)
+
+#-------------------------------------------------------------------------------

@@ -39,6 +39,23 @@ let right = Sponge.digest([4'u8, 5'u8, 6'u8])
 let combination = compress(left, right)
 ```
 
+Compatbility
+------------
+
+For Poseidon2, because of a historical accident, there are unfortunately TWO 
+different sets of "standard" parameters, which is obviously bad for cross-project compatibility.
+
+The switchover happened in commit #bb476b9ca38198cf5092487283c8b8c5d4317c4e in 
+HorizenLab's reference repo. Both versions are safe to use though.
+
+To resolve this issue, since version 0.1.1, we implement both sets (though the default
+is the "old" set of round constants, so that we are backward compatible. This may
+or may not change in the future.)
+
+
+Links
+-----
+
 [1]: https://eprint.iacr.org/2023/323.pdf
 [2]: https://github.com/mratsim/constantine
 [3]: https://github.com/nim-lang/nimble

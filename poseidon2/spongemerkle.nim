@@ -2,23 +2,26 @@ import ./types
 import ./merkle
 import ./sponge
 
-type SpongeMerkle* = object
-  merkle: Merkle
+type SpongeMerkle*[flavour: static Flavour] = object
+  merkle: Merkle[flavour]
 
-func init*(_: type SpongeMerkle): SpongeMerkle =
-  SpongeMerkle(merkle: Merkle.init())
+func init[which](spongemerkle: var SpongeMerkle[which]) =
+  spongemerkle.merkle = Merkle.init(which = which)
 
-func update*(spongemerkle: var SpongeMerkle, chunk: openArray[byte]) =
-  let digest = Sponge.digest(chunk, rate = 2)
+func init*(_: type SpongeMerkle, which: static Flavour = HorizenLabsOld): SpongeMerkle[which] =
+  result.init
+
+func update*[which](spongemerkle: var SpongeMerkle[which], chunk: openArray[byte]) =
+  let digest = Sponge.digest(chunk, rate = 2, which = which)
   spongemerkle.merkle.update(digest)
 
-func finish*(spongemerkle: var SpongeMerkle): F =
+func finish*[which](spongemerkle: var SpongeMerkle[which]): F =
   return spongemerkle.merkle.finish()
 
-func digest*(_: type SpongeMerkle, bytes: openArray[byte], chunkSize: int): F =
+func digest*(_: type SpongeMerkle, bytes: openArray[byte], chunkSize: int, which: static Flavour = HorizenLabsOld): F =
   ## Hashes chunks of data with a sponge of rate 2, and combines the
   ## resulting chunk hashes in a merkle root.
-  var spongemerkle = SpongeMerkle.init()
+  var spongemerkle = SpongeMerkle.init(which = which)
   var index = 0
   while index < bytes.len:
     let start = index

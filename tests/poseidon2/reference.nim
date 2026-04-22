@@ -5,10 +5,14 @@ import poseidon2/types
 import poseidon2/io
 import poseidon2/compress
 
-const KeyNone = F.fromHex("0x0")
-const KeyBottomLayer = F.fromHex("0x1")
-const KeyOdd = F.fromHex("0x2")
+#-------------------------------------------------------------------------------
+
+const KeyNone              = F.fromHex("0x0")
+const KeyBottomLayer       = F.fromHex("0x1")
+const KeyOdd               = F.fromHex("0x2")
 const KeyOddAndBottomLayer = F.fromhex("0x3")
+
+#-------------------------------------------------------------------------------
 
 # Reference implementation of merkle root algorithm
 # Only used in tests
@@ -36,10 +40,10 @@ func merkleRoot(xs: openArray[F], isBottomLayer: static bool) : F =
 
   for i in 0..<halfn:
     const key = when isBottomLayer: KeyBottomLayer else: KeyNone
-    ys[i] = compress( xs[a+2*i], xs[a+2*i+1], key = key )
+    ys[i] = compression( xs[a+2*i], xs[a+2*i+1], key = key )
   if isOdd:
     const key = when isBottomLayer: KeyOddAndBottomLayer else: KeyOdd
-    ys[halfn] = compress( xs[n], zero, key = key )
+    ys[halfn] = compression( xs[n], zero, key = key )
 
   return merkleRoot(ys, isBottomLayer = false)
 
@@ -48,3 +52,5 @@ func merkleRoot*(xs: openArray[F]) : F =
 
 func merkleRoot*(bytes: openArray[byte]): F =
   merkleRoot(toSeq bytes.elements(F))
+
+#-------------------------------------------------------------------------------

@@ -7,6 +7,25 @@ import
 
 #-------------------------------------------------------------------------------
 
+#
+# Note: Because of a historical accident, there are unfortunately TWO different sets 
+# of "standard" parameters, which is obviously bad for cross-project compatibility.
+#
+# the switchover happened at 2023/06/23 in the commit
+#   <https://github.com/HorizenLabs/poseidon2/commit/bb476b9ca38198cf5092487283c8b8c5d4317c4e>
+#
+# You can use this type to select between the two. The default is the "old" set.
+#
+type Flavour* = enum
+  HorizenLabsOld          # the "old" round constants
+  HorizenLabsNew          # the "new" round constants
+
+type SpongeInput* = enum
+  ByteString              # the input of the hash is a sequence of bytes
+  FieldElements           # the input of the hash is a sequence of BN254 field elements
+  
+#-------------------------------------------------------------------------------
+
 type B* = BigInt[254]
 type F* = Fr[BN254_Snarks]
 type S* = (F,F,F)
