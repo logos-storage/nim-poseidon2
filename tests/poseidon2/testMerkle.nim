@@ -106,7 +106,7 @@ suite "merkle root probabilistic test (seed: " & $fuzzing.seed & ")":
 
 #-------------------------------------------------------------------------------
 
-suite "merkle root test vectors (old round constants)":
+suite "merkle root (used as a hash function!) test vectors (old round constants)":
 
   test "field elements":
 
@@ -251,7 +251,7 @@ suite "merkle root test vectors (old round constants)":
 
 #-------------------------------------------------------------------------------
 
-suite "merkle root test vectors (new round constants)":
+suite "merkle root (used as a hash function!) test vectors (new round constants)":
 
   test "field elements":
 
@@ -395,5 +395,3 @@ suite "merkle root test vectors (new round constants)":
       check root.toDecimal == expected[n]
 
 #-------------------------------------------------------------------------------
-
-

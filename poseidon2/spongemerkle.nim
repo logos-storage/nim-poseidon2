@@ -1,3 +1,7 @@
+#
+# Merkle trees over a sequence of bytestrings
+#
+
 import ./types
 import ./merkle
 import ./sponge
@@ -18,7 +22,7 @@ func update*[which](spongemerkle: var SpongeMerkle[which], chunk: openArray[byte
 func finish*[which](spongemerkle: var SpongeMerkle[which]): F =
   return spongemerkle.merkle.finish()
 
-func digest*(_: type SpongeMerkle, bytes: openArray[byte], chunkSize: int, which: static Flavour = HorizenLabsOld): F =
+func digestFixedChunks*(_: type SpongeMerkle, bytes: openArray[byte], chunkSize: int, which: static Flavour = HorizenLabsOld): F =
   ## Hashes chunks of data with a sponge of rate 2, and combines the
   ## resulting chunk hashes in a merkle root.
   var spongemerkle = SpongeMerkle.init(which = which)
@@ -28,4 +32,12 @@ func digest*(_: type SpongeMerkle, bytes: openArray[byte], chunkSize: int, which
     let finish = min(index + chunkSize, bytes.len)
     spongemerkle.update(bytes.toOpenArray(start, finish - 1))
     index += chunkSize
+  return spongemerkle.finish()
+
+func digest*(_: type SpongeMerkle, byteSeqs: openArray[seq[byte]], which: static Flavour = HorizenLabsOld): F =
+  ## Hashes chunks of data with a sponge of rate 2, and combines the
+  ## resulting chunk hashes in a merkle root.
+  var spongemerkle = SpongeMerkle.init(which = which)
+  for index in 0..<byteSeqs.len:
+    spongemerkle.update(byteSeqs[index])
   return spongemerkle.finish()

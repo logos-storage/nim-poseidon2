@@ -1,3 +1,7 @@
+#
+# Merkle trees, used a drop-in replacement for hash functions
+#
+
 import constantine/math/arithmetic
 import constantine/math/io/io_fields
 import ./types
@@ -55,12 +59,14 @@ func finish*[which](merkle: var Merkle[which]): F =
 
   return merkle.todo[0]
 
+# Merkle root of a sequence of field elements (here the Merkle tree is used as a hash function!)
 func digest*(_: type Merkle, elements: openArray[F], which: static Flavour = HorizenLabsOld): F =
   var merkle = Merkle.init(which = which)
   for element in elements:
     merkle.update(element)
   return merkle.finish()
 
+# Merkle root of a sequence of bytes (here the Merkle tree is used as a hash function!)
 func digest*(_: type Merkle, bytes: openArray[byte], which: static Flavour = HorizenLabsOld): F =
   var merkle = Merkle.init(which = which)
   for element in bytes.elements(F):
